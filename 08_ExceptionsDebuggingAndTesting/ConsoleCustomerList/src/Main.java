@@ -35,13 +35,15 @@ public class Main {
                         System.out.println(helpText);
                         break;
                     default:
-                        System.err.println(commandError);
+                        System.out.println(commandError);
                         break;
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
-                System.err.println(e.getMessage() +"\n " + Arrays.toString(e.getStackTrace()) + "\n" + commandError);
-            } catch (IllegalArgumentException ex) {
-                System.err.println(ex.getMessage() +"\n" + Arrays.toString(ex.getStackTrace()));
+                e.printStackTrace();
+                System.out.println(commandError);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                System.out.println(ex.getMessage());
             }
         }
     }

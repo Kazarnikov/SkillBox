@@ -15,6 +15,7 @@ public class StationIndex
         number2line = new HashMap<>();
         stations = new TreeSet<>();
         connections = new TreeMap<>();
+
     }
 
     public void addStation(Station station)

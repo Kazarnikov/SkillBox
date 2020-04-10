@@ -91,9 +91,7 @@ public class RouteCalculator
         if(from.getLine().equals(to.getLine())) {
             return null;
         }
-
         ArrayList<Station> route = new ArrayList<>();
-
         List<Station> fromLineStations = from.getLine().getStations();
         List<Station> toLineStations = to.getLine().getStations();
         for(Station srcStation : fromLineStations)
@@ -109,11 +107,10 @@ public class RouteCalculator
                     {
                         route.clear();
                         route.addAll(way);
-                    }
+                    }return route;
                 }
             }
-        }
-        return route;
+        } return null;
     }
 
     private boolean isConnected(Station station1, Station station2)
@@ -143,7 +140,6 @@ public class RouteCalculator
         if (from.getLine().equals(to.getLine())) {
             return null;
         }
-
         ArrayList<Station> route = new ArrayList<>();
 
         List<Station> fromLineStations = from.getLine().getStations();

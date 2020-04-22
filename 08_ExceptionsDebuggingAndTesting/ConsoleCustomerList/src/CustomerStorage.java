@@ -21,13 +21,13 @@ public class CustomerStorage
                 if (components[2].matches(rvEMail)) {
                     storage.put(name, new Customer(name, components[3], components[2]));
                 } else {
-                    throw new IllegalArgumentException("Wrong format e-mail. Correct format: vasily.petrov@gmail.com");
+                    throw new InputExceptions("Wrong format e-mail. Correct format: vasily.petrov@gmail.com");
                 }
             } else {
-                throw new IllegalArgumentException("Wrong format phone number. Correct format: +79215637722");
+                throw new InputExceptions("Wrong format phone number. Correct format: +79215637722");
             }
         } else {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new InputExceptions("Wrong format. Correct format: Василий Петров vasily.petrov@gmail.com +79215637722");
         }
     }
 

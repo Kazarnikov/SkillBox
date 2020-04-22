@@ -38,7 +38,7 @@ public class Main {
                         System.out.println(commandError);
                         break;
                 }
-            } catch (ArrayIndexOutOfBoundsException e) {
+            } catch (InputExceptions e) {
                 e.printStackTrace();
                 System.out.println(commandError);
             } catch (Exception ex) {

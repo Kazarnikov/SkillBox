@@ -86,31 +86,30 @@ public class RouteCalculator
         return route;
     }
 
-    private List<Station> getRouteWithOneConnection(Station from, Station to)
-    {
-        if(from.getLine().equals(to.getLine())) {
+    private List<Station> getRouteWithOneConnection(Station from, Station to) {
+        if (from.getLine().equals(to.getLine())) {
             return null;
         }
         ArrayList<Station> route = new ArrayList<>();
         List<Station> fromLineStations = from.getLine().getStations();
         List<Station> toLineStations = to.getLine().getStations();
-        for(Station srcStation : fromLineStations)
-        {
-            for(Station dstStation : toLineStations)
-            {
-                if(isConnected(srcStation, dstStation))
-                {
+        for (Station srcStation : fromLineStations) {
+            for (Station dstStation : toLineStations) {
+                if (isConnected(srcStation, dstStation)) {
                     ArrayList<Station> way = new ArrayList<>();
                     way.addAll(getRouteOnTheLine(from, srcStation));
                     way.addAll(getRouteOnTheLine(dstStation, to));
-                    if(route.isEmpty() || route.size() > way.size())
-                    {
+                    if (route.isEmpty() || route.size() > way.size()) {
                         route.clear();
                         route.addAll(way);
-                    }return route;
+                    }
                 }
             }
-        } return null;
+            if (route.size() > 0) {
+                return route;
+            }
+        }
+        return null;
     }
 
     private boolean isConnected(Station station1, Station station2)
@@ -141,7 +140,6 @@ public class RouteCalculator
             return null;
         }
         ArrayList<Station> route = new ArrayList<>();
-
         List<Station> fromLineStations = from.getLine().getStations();
         List<Station> toLineStations = to.getLine().getStations();
         for(Station srcStation : fromLineStations)

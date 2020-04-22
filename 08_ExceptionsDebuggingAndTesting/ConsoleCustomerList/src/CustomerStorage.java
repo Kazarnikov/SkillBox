@@ -27,7 +27,7 @@ public class CustomerStorage
                 throw new IllegalArgumentException("Wrong format phone number. Correct format: +79215637722");
             }
         } else {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new InputExceptions("Wrong format. Correct format: Василий Петров vasily.petrov@gmail.com +79215637722");
         }
     }
 

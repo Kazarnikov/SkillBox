@@ -105,11 +105,9 @@ public class RouteCalculator
                     }
                 }
             }
-            if (route.size() > 0) {
-                return route;
-            }
+
         }
-        return null;
+        return route.isEmpty() ? null : route;
     }
 
     private boolean isConnected(Station station1, Station station2)

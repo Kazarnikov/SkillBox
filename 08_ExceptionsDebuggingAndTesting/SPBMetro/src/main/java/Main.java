@@ -5,9 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.junit.internal.runners.statements.Fail;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,7 +14,9 @@ import java.util.Scanner;
 
 public class Main
 {
-    private static Logger logger;
+    private static Logger searchQuery;
+    private static Logger notFound;
+    private static Logger exception;
 
     private static String dataFile = "src/main/resources/map.json";
     private static Scanner scanner;
@@ -25,8 +25,11 @@ public class Main
 
     public static void main(String[] args)
     {
+        searchQuery = LogManager.getLogger("SearchQuery");
+        notFound = LogManager.getLogger("NotFound");
+        exception = LogManager.getLogger("Exception");
+
         RouteCalculator calculator = getRouteCalculator();
-        logger = LogManager.getRootLogger();
 
         System.out.println("Программа расчёта маршрутов метрополитена Санкт-Петербурга\n");
         scanner = new Scanner(System.in);
@@ -43,7 +46,7 @@ public class Main
                 System.out.println("Длительность: " +
                     RouteCalculator.calculateDuration(route) + " минут");
             } catch (Exception e) {
-                logger.error(e);
+                exception.error(e);
                 e.printStackTrace();
             }
         }
@@ -83,13 +86,13 @@ public class Main
             String line = scanner.nextLine().trim();
             Station station = stationIndex.getStation(line);
             if (station != null) {
-                logger.info("Искали станцию: " + line);
+                searchQuery.info("Искали станцию: " + line);
                 return station;
             }
             if (line.equals("error")) {
                 throw new NullPointerException();
             }
-            logger.warn("Станция не найдена: " + line);
+            notFound.warn("Станция не найдена: " + line);
             System.out.println("Станция не найдена :(");
         }
     }
@@ -112,6 +115,7 @@ public class Main
             parseConnections(connectionsArray);
         }
         catch(Exception ex) {
+            exception.error(ex);
             ex.printStackTrace();
         }
     }
@@ -176,6 +180,7 @@ public class Main
             lines.forEach(line -> builder.append(line));
         }
         catch (Exception ex) {
+            exception.error(ex);
             ex.printStackTrace();
         }
         return builder.toString();

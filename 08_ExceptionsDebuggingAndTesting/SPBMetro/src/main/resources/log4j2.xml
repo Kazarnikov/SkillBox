@@ -4,27 +4,29 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-
         <File name="SearchQuery" fileName="logs/SearchQuery.log">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-            <ThresholdFilter level="warn" onMatch="DENY" onMismatch="ACCEPT"/>
         </File>
-
         <File name="NotFound" fileName="logs/NotFound.log">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-            <ThresholdFilter level="error" onMatch="DENY" onMismatch="ACCEPT"/>
         </File>
-
         <File name="Exception" fileName="logs/Exceptions.log">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
     </appenders>
     <!-- log4j levels: TRACE < DEBUG < INFO < WARN < ERROR < FATAL -->
     <loggers>
+        <logger name="SearchQuery" level="info">
+            <AppenderRef ref="SearchQuery"/>
+        </logger>
+        <logger name="NotFound" level="warn">
+            <AppenderRef ref="NotFound"/>
+        </logger>
+        <logger name="Exception" level="error">
+            <AppenderRef ref="Exception"/>
+        </logger>
         <root level="info">
-            <appender-ref ref="SearchQuery" level="info"/>
-            <appender-ref ref="NotFound" level="warn"/>
-            <appender-ref ref="Exception" level="error"/>
+            <appender-ref ref="Console"/>
         </root>
     </loggers>
 </configuration>

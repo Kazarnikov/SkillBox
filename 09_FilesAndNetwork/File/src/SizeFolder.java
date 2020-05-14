@@ -6,11 +6,37 @@ public class SizeFolder {
 
     private static String dirName = "D:/java/";
     private static long sumBytes;
-    private static File file;
+    private static File folder;
 
     public static void main(String[] args) throws IOException {
-        file = new File(dirName);
+        folder = new File(dirName);
+        getSizeFolderRecursion(folder);
+        //getSizeFolderWalk(folder);
 
+        printSize("Размер содержимого папки " + dirName, sumBytes);
+        printSize("Объем диска", folder.getTotalSpace());
+        printSize("Свободно на диска", folder.getFreeSpace());
+    }
+
+    private static void printSize(String msg, long bytes) {
+        int unit = 1024;
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        char pre = (" KMGTPE").charAt(exp);
+        System.out.printf(msg + " : %.1f %sB\n", bytes / Math.pow(unit, exp), pre);
+    }
+
+    private static void getSizeFolderRecursion(File folder) {
+        File[] listFiles = folder.listFiles();
+        for (File file : listFiles != null ? listFiles : new File[0]) {
+            if (file.isDirectory()) {
+                getSizeFolderRecursion(file);
+            } else {
+                sumBytes += file.length();
+            }
+        }
+    }
+
+    private static void getSizeFolderWalk(File folder) {
         FileVisitor<Path> fileVisitor = new FileVisitor<>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
@@ -39,15 +65,5 @@ public class SizeFolder {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        printSize("Размер содержимого папки " + dirName, sumBytes);
-        printSize("Объем диска", file.getTotalSpace());
-        printSize("Свободно на диска", file.getFreeSpace());
-    }
-
-    static void printSize(String msg, long bytes) {
-        int unit = 1024;
-        int exp = (int) (Math.log(bytes) / Math.log(unit));
-        char pre = (" KMGTPE").charAt(exp);
-        System.out.printf(msg + " : %.1f %sB\n", bytes / Math.pow(unit, exp), pre);
     }
 }

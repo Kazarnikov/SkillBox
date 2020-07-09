@@ -14,7 +14,9 @@ public class Main {
         try {
             Connection connection = DriverManager.getConnection(url, user, pass);
             Statement statement = connection.createStatement();
-            ResultSet set = statement.executeQuery("SELECT course_name, (count(*)/ (MAX(MONTH(subscription_date)) -  MIN(MONTH(subscription_date)))) AS purchases_month FROM  PurchaseList GROUP BY course_name");
+            ResultSet set = statement.executeQuery("SELECT course_name, " +
+                    "(count(*)/ (SELECT COUNT(DISTINCT MONTH(subscription_date)))) AS purchases_month " +
+                    "FROM  PurchaseList GROUP BY course_name");
 
             System.out.printf("%15s %53s\n", "Курсы", "| Средние число покупок в месяц |");
             System.out.println("---------------------------------------------------------------------");

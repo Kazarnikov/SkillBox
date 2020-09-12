@@ -14,13 +14,15 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-
     private String name;
 
     private int age;
 
     private Date registration_date;
 
-    @ManyToMany(mappedBy = "students")
+    @ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
     private List<Course> courses;
+
+    @OneToMany(mappedBy = "studentId", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Subscription> subscriptions;
 }

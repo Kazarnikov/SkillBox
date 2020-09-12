@@ -7,7 +7,6 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.util.stream.Collectors;
 
-
 public class Main {
     public static void main(String[] args) {
         StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
@@ -19,6 +18,7 @@ public class Main {
         Course course = session.load(Course.class, 5);
         Teacher teacher = session.get(Teacher.class, 10);
         Student student = session.get(Student.class, 2);
+        Subscription subscription = session.get(Subscription.class, new Subscription.KeyId(1, 10));
 
         //ManyToOne
         System.out.println("\u001B[35m 1 На курсе \"" + course.getName() + "\" учится "
@@ -30,16 +30,26 @@ public class Main {
                 .stream()
                 .map(Course::getName)
                 .collect(Collectors.toList()) + ".\u001B[30m" + " Teacher");
-        //ManyToMany
+        //ManyToMany + @OneToMany
         System.out.println("\u001B[35m 3 У студент " + student.getName() + " есть курсы " + student.getCourses()
                 .stream()
                 .map(Course::getName)
-                .collect(Collectors.toList()) + ".\u001B[30m" + " Student");
-        //ManyToMany
+                .collect(Collectors.toList()) + " даты подписок " +
+                student.getSubscriptions()
+                        .stream()
+                        .map(Subscription::getSubscriptionDate)
+                        .collect(Collectors.toList()) + ".\u001B[30m" + " Student");
+        //ManyToMany + @OneToMany
         System.out.println("\u001B[35m 4 На курсе \"" + course.getName() + "\" учатся студенты " + course.getStudents()
                 .stream()
                 .map(Student::getName)
-                .collect(Collectors.toList()) + "\u001B[30m");
+                .collect(Collectors.toList()) + " даты подписок " +
+                course.getSubscriptions()
+                        .stream()
+                        .map(Subscription::getSubscriptionDate)
+                        .collect(Collectors.toList()) + "\u001B[30m");
+
+        System.out.println(subscription.getCourseId().getName() + " " +subscription.getSubscriptionDate() + " " + subscription.getStudentId().getName());
 
        /* System.out.println(course.getPurchaseList().getPrice());
 

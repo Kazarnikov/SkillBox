@@ -19,6 +19,6 @@ public class Teacher {
 
     private int age;
 
-    @OneToMany(mappedBy = "teacher", orphanRemoval = true)
+    @OneToMany(mappedBy = "teacher", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Course> course;
 }

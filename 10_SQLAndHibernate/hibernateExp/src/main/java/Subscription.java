@@ -24,6 +24,7 @@ public class Subscription {
     private Course courseId;
 
     @Column(name = "subscription_date")
+    @Temporal(TemporalType.DATE)
     private Date subscriptionDate;
 
     @Data

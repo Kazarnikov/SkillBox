@@ -6,16 +6,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-//@IdClass(PurchaseList.PurchaseListID.class)
 @Entity(name = "PurchaseList")
+@IdClass(PurchaseList.PurchaseListID.class)
 public class PurchaseList {
 
-    @EmbeddedId
-    private PurchaseListID PurchaseListID;
-
+    @Id
     @Column(name = "student_name", insertable = false, updatable = false)
     private String studentName;
-
+    @Id
     @Column(name = "course_name", insertable = false, updatable = false)
     private String courseName;
 
@@ -27,18 +25,10 @@ public class PurchaseList {
     @Data
     @Embeddable
     @EqualsAndHashCode
-    public class PurchaseListID implements Serializable {
+    public static class PurchaseListID implements Serializable {
         @Column(name = "student_name")
         private String studentName;
         @Column(name = "course_name")
         private String courseName;
-
-        public PurchaseListID() {
-        }
-
-        public PurchaseListID(String studentName, String courseName) {
-            this.studentName = studentName;
-            this.courseName = courseName;
-        }
     }
 }

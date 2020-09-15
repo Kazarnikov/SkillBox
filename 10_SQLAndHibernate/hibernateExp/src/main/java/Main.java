@@ -1,10 +1,12 @@
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -49,7 +51,26 @@ public class Main {
                         .map(Subscription::getSubscriptionDate)
                         .collect(Collectors.toList()) + "\u001B[30m");
 
-        System.out.println(subscription.getCourseId().getName() + " " +subscription.getSubscriptionDate() + " " + subscription.getStudentId().getName());
+        System.out.println(subscription.getCourseId().getName() + " " + subscription.getSubscriptionDate() + " " + subscription.getStudentId().getName());
+
+        Transaction tx = session.beginTransaction();
+        List<PurchaseList> purchaseLists = session.createQuery("FROM PurchaseList",PurchaseList.class).getResultList();
+        List<Student> students = session.createQuery("FROM Students", Student.class).getResultList();
+        List<Course> courses = session.createQuery("FROM Courses", Course.class).getResultList();
+        for (PurchaseList val : purchaseLists) {
+            for (Student s : students) {
+                if (val.getStudentName().equals(s.getName())) {
+                    for (Course c : courses) {
+                        if (val.getCourseName().equals(c.getName())) {
+                            session.save(new LinkedPurchaseList(s.getId(), c.getId()));
+                        }
+                    }
+                }
+            }
+        }
+        tx.commit();
+        session.close();
+        sessionFactory.close();
 
        /* System.out.println(course.getPurchaseList().getPrice());
 
@@ -64,7 +85,6 @@ public class Main {
 
         List<Course> course2 = session.createQuery("FROM Courses", Course.class).list();
         course2.forEach(x -> System.out.println(x.getName() + " " + x.getStudentsCount()));*/
-        session.close();
-        sessionFactory.close();
+
     }
 }

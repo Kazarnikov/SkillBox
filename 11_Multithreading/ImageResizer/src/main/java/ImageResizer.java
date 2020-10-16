@@ -1,24 +1,24 @@
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Objects;
 
 public class ImageResizer extends Thread {
+    private final int newWidth;
+    private final String dstFolder;
+    private final Iterator<File> iterator;
 
-    private static int newWidth = 300;
-    private static String srcFolder = "D:\\Java\\src";
-    private static String dstFolder = "D:\\Java\\dst";
-    private static Iterator<File> iterator = new ArrayList<>(
-            Arrays.asList(Objects.requireNonNull(new File(srcFolder).listFiles()))).iterator();
+    public ImageResizer(int newWidth, String dstFolder, Iterator<File> iterator) {
+        this.newWidth = newWidth;
+        this.dstFolder = dstFolder;
+        this.iterator = iterator;
+    }
 
     @Override
     public void run() {
         int count = 0;
         try {
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 File file = getFileNext();
 
                 BufferedImage image = ImageIO.read(file);
@@ -47,7 +47,7 @@ public class ImageResizer extends Thread {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        System.out.println("Time " + (System.currentTimeMillis() - Main.start)  + " ms Processed files " + count + " Thread " + getName() );
+        System.out.println("Time " + (System.currentTimeMillis() - Main.start) + " ms Processed files " + count + " Thread " + getName());
     }
 
     private synchronized File getFileNext() {

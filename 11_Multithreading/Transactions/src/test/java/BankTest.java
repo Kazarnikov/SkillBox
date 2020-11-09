@@ -1,14 +1,10 @@
 import junit.framework.TestCase;
 
-import java.util.HashMap;
-
 public class BankTest extends TestCase {
     Account account1;
     Account account2;
     Account account3;
-
-    private HashMap<String, Account> accounts = new HashMap<>();
-    private Bank bank;
+    Bank bank;
 
     @Override
     protected void setUp() throws Exception {
@@ -18,18 +14,17 @@ public class BankTest extends TestCase {
         account2 = new Account(100000, "2");
         account3 = new Account(100000, "3");
 
-        accounts.put("1", account1);
-        accounts.put("2", account2);
-        accounts.put("3", account3);
-        bank.setAccounts(accounts);
+        bank.setAccounts("1", account1);
+        bank.setAccounts("2", account2);
+        bank.setAccounts("3", account3);
     }
 
     public void testIsFraud() throws InterruptedException {
         for (int i = 0; i < 12; i++) {
             new Thread(() -> {
                 try {
-                   bank.transfer("1", "2", 60000);
-                   bank.transfer("2", "1", 60000);
+                    bank.transfer("1", "2", 60000);
+                    bank.transfer("2", "1", 60000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

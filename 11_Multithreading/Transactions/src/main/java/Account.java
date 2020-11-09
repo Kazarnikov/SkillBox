@@ -4,9 +4,6 @@ public class Account {
     private volatile String accNumber;
     private volatile boolean isBlock = false;
 
-    public Account() {
-    }
-
     public Account(long money, String accNumber) {
         this.money = money;
         this.accNumber = accNumber;

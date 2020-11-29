@@ -9,10 +9,9 @@ import java.util.Date;
 @RestController
 public class DefaultController {
 
-    @RequestMapping("/")
+    @RequestMapping("/date/")
     public String string() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d.M.yyyy ~ HH:mm");
         return simpleDateFormat.format(new Date());
     }
 }
-

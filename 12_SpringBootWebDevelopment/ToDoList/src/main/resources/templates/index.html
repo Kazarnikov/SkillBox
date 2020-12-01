@@ -8,25 +8,13 @@
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-    <div id="task-form">
-        <form>
-            <h2>Добавление задания</h2>
-            <label>Название задания:</label>
-            <input type="text" name="name" value="">
-            <label>Год выпуска:</label>
-            <input type="text" name="year" value="">
-            <hr>
-            <button id="save-task">Сохранить</button>
-        </form>
+<h1>Список задач (<span th:text="'Всего ' + ${tasksCount} + ' - задач'">0</span>)</h1>
+<br><br>
+<div id="task-list">
+    <div th:each="task : ${tasks}">
+        <a href="#" class="task-link" th:attr="data-id=${task.id}" th:text="${task.task}"></a>
+<!--        <p th:text="${task.task} + ' | ' + ${task.date}" />-->
     </div>
-    <h1>Библиотека (<span th:text="${tasksCount}">0</span>)</h1>
-    <button id="show-add-task-form">Добавить книгу</button>
-    <br><br>
-    <div id="task-list">
-<!--        <div th:each="task : ${tasks}">-->
-<!--            <a href="#" class="task-link" th:attr="data-id=${task.id}" th:text="${task.name}"></a>-->
-<!--        </div>-->
-    </div>
-    <p th:text="${someParameter}"></p>
+</div>
 </body>
 </html>

@@ -30,23 +30,23 @@ public class TaskController {
         return new ResponseEntity<>(taskRepository.save(task), HttpStatus.CREATED);
     }
 
-    @GetMapping("/tasks/{id}/")
-    public ResponseEntity getTask(@PathVariable("id") int id) {
-        Optional<Task> task = taskRepository.findById(id);
-        if (task.isEmpty()) {
+    @GetMapping("/tasks/{id}")
+    public ResponseEntity<Task> getTask(@PathVariable("id") int id) {
+        Optional<Task> tasks = taskRepository.findById(id);
+        if (tasks.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
-        return new ResponseEntity<>(task.get(), HttpStatus.OK);
+        return new ResponseEntity<>(tasks.get(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/tasks/{id}/")
+    @DeleteMapping("/tasks/{id}")
     public ResponseEntity deleteTask(@PathVariable("id") int id) {
-        Optional<Task> task = taskRepository.findById(id);
-        if (task.isEmpty()) {
+        Optional<Task> tasks = taskRepository.findById(id);
+        if (tasks.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
         taskRepository.deleteById(id);
-        return new ResponseEntity<>(task.get(), HttpStatus.OK);
+        return new ResponseEntity<>(tasks.get(), HttpStatus.OK);
     }
 
     @DeleteMapping("/tasks/")
@@ -59,7 +59,7 @@ public class TaskController {
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
-    @PutMapping("/tasks/{id}/")
+    @PutMapping("/tasks/{id}")
     public ResponseEntity updateTask(@PathVariable("id") int id, @RequestBody Task task) {
         Optional<Task> tasks = taskRepository.findById(id);
         if (tasks.isEmpty()) {

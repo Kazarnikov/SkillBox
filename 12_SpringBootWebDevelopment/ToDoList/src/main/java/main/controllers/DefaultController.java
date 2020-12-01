@@ -1,17 +1,25 @@
 package main.controllers;
 
+import main.model.Task;
+import main.model.TaskRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-@RestController
+@Controller
 public class DefaultController {
+    @Autowired
+    TaskRepository taskRepository;
 
-    @RequestMapping("/date/")
-    public String string() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d.M.yyyy ~ HH:mm");
-        return simpleDateFormat.format(new Date());
+    @RequestMapping("/")
+    public String index(Model model) {
+        List<Task> tasks = (ArrayList<Task>) taskRepository.findAll();
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("tasksCount", tasks.size());
+        return "index";
     }
 }

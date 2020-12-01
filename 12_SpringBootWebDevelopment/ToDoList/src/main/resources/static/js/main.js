@@ -2,18 +2,18 @@ $(function(){
 
     const appendTask = function(data){
         var taskCode = '<a href="#" class="task-link" data-id="' +
-            data.id + '">' + data.name + '</a><br>';
+            data.id + '">' + data.task + '</a><br>';
         $('#task-list')
             .append('<div>' + taskCode + '</div>');
     };
 
     //Loading tasks on load page
-    $.get('/tasks/', function(response)
-    {
-        for(i in response) {
-            appendTask(response[i]);
-        }
-    });
+//    $.get('/tasks/', function(response)
+//    {
+//        for(i in response) {
+//            appendTask(response[i]);
+//        }
+//    });
 
     //Show adding task form
     $('#show-add-task-form').click(function(){
@@ -36,7 +36,7 @@ $(function(){
             url: '/tasks/' + taskId,
             success: function(response)
             {
-                var code = '<span>Год выпуска:' + response.year + '</span>';
+                var code = '<span> : ' + response.date + '</span>';
                 link.parent().append(code);
             },
             error: function(response)
@@ -64,7 +64,7 @@ $(function(){
                 task.id = response;
                 var dataArray = $('#task-form form').serializeArray();
                 for(i in dataArray) {
-                    task[dataArray[i]['name']] = dataArray[i]['value'];
+                    task[dataArray[i]['task']] = dataArray[i]['value'];
                 }
                 appendTask(task);
             }

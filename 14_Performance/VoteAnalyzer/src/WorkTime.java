@@ -30,14 +30,14 @@ public class WorkTime
 
     public String toString()
     {
-        String line = "";
+        StringBuilder line = new StringBuilder();
         for(TimePeriod period : periods)
         {
-            if(!line.isEmpty()) {
-                line += ", ";
+            if(line.length() > 0) {
+                line.append(", ");
             }
-            line += period;
+            line.append(period);
         }
-        return line;
+        return line.toString();
     }
 }

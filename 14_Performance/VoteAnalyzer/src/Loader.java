@@ -7,7 +7,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,19 +22,18 @@ public class Loader {
 
     public static void main(String[] args) throws Exception {
 
-        long InitMemorySize = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        String fileName = "res/data-1572M.xml";
+        countingVoters(fileName);
+        long initMemorySize = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         long startTime = System.currentTimeMillis();
 
-        String fileName = "res/data-18M.xml";
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
         XMLHandler handler = new XMLHandler();
         parser.parse(fileName, handler);
-        handler.printDuplicatedVoter();
 
         long end = System.currentTimeMillis() - startTime;
-        long e = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() - InitMemorySize) / 1048576;
-        System.out.println(Runtime.getRuntime().freeMemory()/ 1048576);
+        long e = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() - initMemorySize) / 1048576;
         System.out.println("Lead Time: " + end + " ms.");
         System.out.println("Memory used: " + e + " MB");
     }
@@ -77,6 +78,17 @@ public class Loader {
                 voteStationWorkTimes.put(station, workTime);
             }
             workTime.addVisitTime(time.getTime());
+        }
+    }
+
+    private static void countingVoters(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            System.out.printf("\u001B[34m" + "In file %,d voters." + "\u001B[0m\n", reader
+                    .lines()
+                    .filter(e -> e.contains("<voter name="))
+                    .count());
+        } catch (Exception e) {
+            System.err.println(e.getLocalizedMessage());
         }
     }
 }

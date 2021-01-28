@@ -2,49 +2,41 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.text.ParseException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 
 public class XMLHandler extends DefaultHandler {
 
-    Voter voter;
-    private static final SimpleDateFormat birthDayFormat = new SimpleDateFormat("yyyy.MM.dd");
-    private HashMap<Voter, Integer> voterCounts;
+    private static final SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 
-    public XMLHandler(){
-        voterCounts = new HashMap<>();
+    @Override
+    public void startDocument() {
+        System.out.println("Start parse XML... " + format.format(new Date()));
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         try {
-            if (qName.equals("voter") && voter == null) {
-                Date birthDay = birthDayFormat.parse(attributes.getValue("birthDay"));
-                voter = new Voter(attributes.getValue("name"), birthDay);
-            } else if (qName.equals("visit") && voter != null){
-                int count = voterCounts.getOrDefault(voter, 0);
-                voterCounts.put(voter, count + 1);
+            if (qName.equals("voter")) {
+                String birthDay = attributes.getValue("birthDay");
+                String name = attributes.getValue("name");
+                DBConnection.countVoter(name, birthDay);
             }
-        } catch (ParseException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (qName.equals("voter")){
-            voter = null;
-        }
-    }
-
-    public void printDuplicatedVoter(){
-        for(Voter voter : voterCounts.keySet()){
-            int count = voterCounts.get(voter);
-            if (count > 1){
-                System.out.println(voter.toString() + " - " + count);
-            }
+    public void endDocument() {
+        try {
+            DBConnection.executeMultiInsert();
+            System.out.println("Stop parse XML..."  + format.format(new Date()));
+            DBConnection.printVoterCounts();
+            DBConnection.getConnection().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

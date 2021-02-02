@@ -1,42 +1,42 @@
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.HashMap;
 
 public class XMLHandler extends DefaultHandler {
 
-    private static final SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+    private Voter voter;
+    private final HashMap<Voter, Byte> voterCounts;
 
-    @Override
-    public void startDocument() {
-        System.out.println("Start parse XML... " + format.format(new Date()));
+    public XMLHandler() {
+        voterCounts = new HashMap<>();
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        try {
-            if (qName.equals("voter")) {
-                String birthDay = attributes.getValue("birthDay");
-                String name = attributes.getValue("name");
-                DBConnection.countVoter(name, birthDay);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
+        if (qName.equals("voter") && voter == null) {
+            String birthDay = attributes.getValue("birthDay");
+            String name = attributes.getValue("name");
+            voter = new Voter(name, birthDay);
+        } else if (qName.equals("visit") && voter != null) {
+            byte count = voterCounts.getOrDefault(voter, (byte) 0);
+            voterCounts.put(voter, (byte) (count + 1));
         }
     }
 
     @Override
-    public void endDocument() {
-        try {
-            DBConnection.executeMultiInsert();
-            System.out.println("Stop parse XML..."  + format.format(new Date()));
-            DBConnection.printVoterCounts();
-            DBConnection.getConnection().close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void endElement(String uri, String localName, String qName) {
+        if (qName.equals("voter")) {
+            voter = null;
+        }
+    }
+
+    public void printDuplicatedVoter() {
+        for (Voter voter : voterCounts.keySet()) {
+            byte count = voterCounts.get(voter);
+            if (count > 1) {
+                System.out.println(voter.toString() + " - " + count);
+            }
         }
     }
 }
